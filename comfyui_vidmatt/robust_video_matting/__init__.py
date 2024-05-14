@@ -4,6 +4,7 @@ from comfy.model_management import soft_empty_cache, get_torch_device
 from PIL import ImageColor
 
 from comfyui_vidmatt.utils import CKPTS_PATH, load_file_from_url, prepare_frames_color
+import os
 
 def auto_downsample_ratio(h, w):
     """
@@ -31,7 +32,11 @@ class RobustVideoMatting:
     CATEGORY = "Video Matting"
 
     def matting(self, video_frames, backbone, fp16, bg_color, batch_size):
-        model_path = load_file_from_url(download_url_template.format(backbone=backbone, dtype="fp16" if fp16 else "fp32"), model_dir=CKPTS_PATH)
+        cache_path = f'/stable-diffusion-cache/models/RobustVideoMatting/{download_url_template.format(backbone=backbone, dtype="fp16" if fp16 else "fp32").split('/')[-1]}'
+        if os.path.exists(cache_path):
+            model_path = cache_path
+        else:
+            model_path = load_file_from_url(download_url_template.format(backbone=backbone, dtype="fp16" if fp16 else "fp32"), model_dir=CKPTS_PATH)
         model = torch.jit.load(model_path, map_location=device)
         video_frames, orig_num_frames, bg_color = prepare_frames_color(video_frames, bg_color, batch_size)
         bg_color = bg_color.to(device)
