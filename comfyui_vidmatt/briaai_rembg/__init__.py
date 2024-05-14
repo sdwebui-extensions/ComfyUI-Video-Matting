@@ -40,7 +40,10 @@ class BriaaiRembg:
 
 
     def matting(self, video_frames, version, fp16, bg_color, batch_size, **kwargs):
-        model_path = load_file_from_url(download_url, file_name=f"briaai_rmbg_{version}.pth", model_dir=CKPTS_PATH)
+        if os.path.exists('/stable-diffusion-cache/models/RMBG-1.4/model.pth'):
+            model_path = '/stable-diffusion-cache/models/RMBG-1.4/model.pth'
+        else:
+            model_path = load_file_from_url(download_url, file_name=f"briaai_rmbg_{version}.pth", model_dir=CKPTS_PATH)
         model = BriaRMBG()
         model.load_state_dict(torch.load(model_path, map_location="cpu"))
         model.to(device).eval()
