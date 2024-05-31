@@ -32,7 +32,7 @@ class RobustVideoMatting:
     CATEGORY = "Video Matting"
 
     def matting(self, video_frames, backbone, fp16, bg_color, batch_size):
-        cache_path = f'/stable-diffusion-cache/models/RobustVideoMatting/{download_url_template.format(backbone=backbone, dtype="fp16" if fp16 else "fp32").split('/')[-1]}'
+        cache_path = f'/stable-diffusion-cache/models/RobustVideoMatting/{download_url_template.format(backbone=backbone, dtype="fp16" if fp16 else "fp32").split("/")[-1]}'
         if os.path.exists(cache_path):
             model_path = cache_path
         else:
